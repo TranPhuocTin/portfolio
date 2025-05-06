@@ -16,7 +16,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.0'  # Cập nhật lên phiên bản mới nhất tương thích với Dart SDK 3.6+
+          flutter-version: '3.29.3'  # Cập nhật lên phiên bản mới nhất tương thích với Dart SDK 3.6+
           channel: 'stable'
 
       # Chạy lệnh build web
