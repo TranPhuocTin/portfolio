@@ -1,9 +1,18 @@
 import 'package:url_launcher/url_launcher.dart';
 
 class UrlLauncherHelper {
-  static Future<void> launchURL(String url) async {
+  static Future<void> launchURL(
+    String url, 
+    {bool inNewTab = true, bool enableDomStorage = true}
+  ) async {
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+      await launchUrl(
+        Uri.parse(url),
+        webOnlyWindowName: inNewTab ? '_blank' : '_self',
+        webViewConfiguration: WebViewConfiguration(
+          enableDomStorage: enableDomStorage,
+        ),
+      );
     } else {
       throw 'Could not launch $url';
     }

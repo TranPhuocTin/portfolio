@@ -6,6 +6,12 @@ import 'package:portfolio/widgets/custom_button.dart';
 import 'package:portfolio/widgets/section_title.dart';
 import 'package:portfolio/widgets/project_card.dart';
 import 'package:portfolio/utils/url_launcher_helper.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'dart:math' as math;
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:portfolio/utils/image_placeholder.dart';
+import 'package:go_router/go_router.dart';
+import 'package:portfolio/screens/project_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,7 +20,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   
   // Controllers for contact form
@@ -37,9 +43,47 @@ class _HomeScreenState extends State<HomeScreen> {
   
   int _selectedIndex = 0;
 
+  // List of particles for background effect
+  late List<Particle> _particles;
+  late AnimationController _particleController;
+
   @override
   void initState() {
     super.initState();
+    
+    // Initialize particles
+    _particles = List.generate(
+      50, 
+      (_) => Particle(
+        position: Offset(
+          math.Random().nextDouble() * 1200,
+          math.Random().nextDouble() * 800,
+        ),
+        speed: Offset(
+          (math.Random().nextDouble() - 0.5) * 0.8,
+          (math.Random().nextDouble() - 0.5) * 0.8,
+        ),
+        radius: math.Random().nextDouble() * 4 + 1,
+      ),
+    );
+    
+    // Initialize animation controller for particles
+    _particleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 16), // ~60fps
+    )..repeat();
+    
+    _particleController.addListener(() {
+      for (var particle in _particles) {
+        particle.position += particle.speed;
+        // Wrap particles around screen edges
+        if (particle.position.dx < 0) particle.position = Offset(1200, particle.position.dy);
+        if (particle.position.dx > 1200) particle.position = Offset(0, particle.position.dy);
+        if (particle.position.dy < 0) particle.position = Offset(particle.position.dx, 800);
+        if (particle.position.dy > 800) particle.position = Offset(particle.position.dx, 0);
+      }
+      setState(() {});
+    });
     
     // Add a post-frame callback to update section offsets based on screen size
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -57,6 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _nameController.dispose();
     _subjectController.dispose();
     _messageController.dispose();
+    _particleController.dispose();
     super.dispose();
   }
   
@@ -119,6 +164,15 @@ class _HomeScreenState extends State<HomeScreen> {
       subject: subject,
       body: bodyText,
     );
+  }
+  
+  // Show project detail dialog
+  void _showProjectDetail(Map<String, dynamic> project) {
+    // Tạo project ID từ tiêu đề dự án (slug)
+    final projectId = project['title'].toString().toLowerCase().replaceAll(' ', '-');
+    
+    // Điều hướng tới đường dẫn /project/:id và truyền dữ liệu project
+    context.goNamed('project-detail', pathParameters: {'id': projectId}, extra: project);
   }
 
   @override
@@ -260,85 +314,107 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Hero Section
   Widget _buildHeroSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
       children: [
-        const Text(
-          'Hi, my name is',
-          style: TextStyle(
+        // Animated background particles
+        Positioned.fill(
+          child: CustomPaint(
+            painter: ParticlesPainter(particles: _particles),
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Hi, my name is',
+              style: const TextStyle(
+                color: AppColors.secondaryColor,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ).animate().fadeIn(duration: 500.ms, delay: 200.ms).slideX(),
+            const SizedBox(height: 20),
+            Text(
+              AppConstants.name,
+              style: TextStyle(
+                color: AppColors.textColor,
+                fontSize: ResponsiveHelper.isMobile(context) ? 40 : 70,
+                fontWeight: FontWeight.bold,
+                height: 1.1,
+              ),
+            ).animate().fadeIn(duration: 500.ms, delay: 400.ms).slideX(),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Text(
+                  "I'm a ",
+                  style: TextStyle(
+                    color: AppColors.subTextColor,
+                    fontSize: ResponsiveHelper.isMobile(context) ? 24 : 40,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                _buildAnimatedJobTitle(),
+              ],
+            ).animate().fadeIn(duration: 500.ms, delay: 600.ms),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: ResponsiveHelper.isMobile(context) ? double.infinity : 500,
+              child: Text(
+                AppConstants.aboutMe,
+                style: const TextStyle(
+                  color: AppColors.subTextColor,
+                  fontSize: 18,
+                  height: 1.6,
+                ),
+              ),
+            ).animate().fadeIn(duration: 500.ms, delay: 800.ms),
+            const SizedBox(height: 40),
+            Row(
+              children: [
+                CustomButton(
+                  text: 'Xem Dự Án',
+                  onPressed: () {
+                    setState(() => _selectedIndex = 3); // Projects index
+                    _scrollToSection(3);
+                  },
+                  icon: Icons.arrow_forward,
+                ).animate().scale(delay: 1000.ms),
+                const SizedBox(width: 16),
+                CustomButton(
+                  text: 'Liên Hệ',
+                  onPressed: () {
+                    setState(() => _selectedIndex = 5); // Contact index
+                    _scrollToSection(5);
+                  },
+                  outline: true,
+                ).animate().scale(delay: 1100.ms),
+              ],
+            ),
+            const SizedBox(height: 40),
+            _buildSocialLinks().animate().fadeIn(delay: 1200.ms),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // Animated job title with typewriter effect
+  Widget _buildAnimatedJobTitle() {
+    return AnimatedTextKit(
+      animatedTexts: [
+        TypewriterAnimatedText(
+          AppConstants.title,
+          textStyle: TextStyle(
             color: AppColors.secondaryColor,
-            fontSize: 16,
+            fontSize: ResponsiveHelper.isMobile(context) ? 24 : 40,
             fontWeight: FontWeight.w500,
           ),
+          speed: const Duration(milliseconds: 100),
         ),
-        const SizedBox(height: 20),
-        Text(
-          AppConstants.name,
-          style: TextStyle(
-            color: AppColors.textColor,
-            fontSize: ResponsiveHelper.isMobile(context) ? 40 : 70,
-            fontWeight: FontWeight.bold,
-            height: 1.1,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Text(
-              "I'm a ",
-              style: TextStyle(
-                color: AppColors.subTextColor,
-                fontSize: ResponsiveHelper.isMobile(context) ? 24 : 40,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Text(
-              AppConstants.title,
-              style: TextStyle(
-                color: AppColors.secondaryColor,
-                fontSize: ResponsiveHelper.isMobile(context) ? 24 : 40,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 30),
-        SizedBox(
-          width: ResponsiveHelper.isMobile(context) ? double.infinity : 500,
-          child: Text(
-            AppConstants.aboutMe,
-            style: const TextStyle(
-              color: AppColors.subTextColor,
-              fontSize: 18,
-              height: 1.6,
-            ),
-          ),
-        ),
-        const SizedBox(height: 40),
-        Row(
-          children: [
-            CustomButton(
-              text: 'Xem Dự Án',
-              onPressed: () {
-                setState(() => _selectedIndex = 3); // Projects index
-                _scrollToSection(3);
-              },
-              icon: Icons.arrow_forward,
-            ),
-            const SizedBox(width: 16),
-            CustomButton(
-              text: 'Liên Hệ',
-              onPressed: () {
-                setState(() => _selectedIndex = 5); // Contact index
-                _scrollToSection(5);
-              },
-              outline: true,
-            ),
-          ],
-        ),
-        const SizedBox(height: 40),
-        _buildSocialLinks(),
       ],
+      totalRepeatCount: 1,
+      displayFullTextOnTap: true,
     );
   }
 
@@ -435,12 +511,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionTitle(title: 'Skills'),
+        const SectionTitle(title: 'Skills')
+            .animate()
+            .fadeIn(duration: 500.ms)
+            .slide(begin: const Offset(-0.1, 0), end: Offset.zero),
         const SizedBox(height: 20),
         Wrap(
           spacing: 16,
           runSpacing: 16,
-          children: AppConstants.skills.map((skill) {
+          children: AppConstants.skills.asMap().entries.map((entry) {
+            final index = entry.key;
+            final skill = entry.value;
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
@@ -455,7 +536,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontSize: 14,
                 ),
               ),
-            );
+            )
+            .animate(delay: Duration(milliseconds: 50 * index))
+            .fadeIn(duration: 400.ms)
+            .slide(begin: const Offset(0, 0.2), end: Offset.zero)
+            .then()
+            .shimmer(duration: 1200.ms, delay: 600.ms);
           }).toList(),
         ),
       ],
@@ -467,7 +553,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionTitle(title: 'Recent Projects'),
+        const SectionTitle(title: 'Recent Projects')
+            .animate(onPlay: (controller) => controller.repeat())
+            .shimmer(duration: 1800.ms, color: AppColors.secondaryColor.withOpacity(0.5)),
         const SizedBox(height: 40),
         ResponsiveHelper.responsiveWidget(
           context: context,
@@ -481,7 +569,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMobileProjectGrid() {
     return Column(
-      children: AppConstants.projects.map((project) {
+      children: AppConstants.projects.asMap().entries.map((entry) {
+        final index = entry.key;
+        final project = entry.value;
         return Padding(
           padding: const EdgeInsets.only(bottom: 40),
           child: ProjectCard(
@@ -491,7 +581,10 @@ class _HomeScreenState extends State<HomeScreen> {
             github: project['github'],
             live: project['live'],
             image: project['image'],
-          ),
+            onTap: () => _showProjectDetail(project),
+          ).animate(delay: Duration(milliseconds: 100 * index))
+              .fadeIn(duration: 600.ms)
+              .slide(begin: const Offset(0, 0.1), end: Offset.zero),
         );
       }).toList(),
     );
@@ -517,7 +610,10 @@ class _HomeScreenState extends State<HomeScreen> {
           github: project['github'],
           live: project['live'],
           image: project['image'],
-        );
+          onTap: () => _showProjectDetail(project),
+        ).animate(delay: Duration(milliseconds: 100 * index))
+            .fadeIn(duration: 600.ms)
+            .slide(begin: const Offset(0, 0.1), end: Offset.zero);
       },
     );
   }
@@ -542,7 +638,10 @@ class _HomeScreenState extends State<HomeScreen> {
           github: project['github'],
           live: project['live'],
           image: project['image'],
-        );
+          onTap: () => _showProjectDetail(project),
+        ).animate(delay: Duration(milliseconds: 100 * index))
+            .fadeIn(duration: 600.ms)
+            .slide(begin: const Offset(0, 0.1), end: Offset.zero);
       },
     );
   }
@@ -552,7 +651,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionTitle(title: 'Work Experience'),
+        const SectionTitle(title: 'Work Experience')
+            .animate()
+            .fadeIn(duration: 500.ms)
+            .slide(begin: const Offset(-0.1, 0), end: Offset.zero),
         const SizedBox(height: 30),
         ListView.builder(
           shrinkWrap: true,
@@ -565,11 +667,15 @@ class _HomeScreenState extends State<HomeScreen> {
               company: experience['company'],
               duration: experience['duration'],
               description: experience['description'],
+              index: index,
             );
           },
         ),
         const SizedBox(height: 40),
-        const SectionTitle(title: 'Education'),
+        const SectionTitle(title: 'Education')
+            .animate()
+            .fadeIn(duration: 500.ms)
+            .slide(begin: const Offset(-0.1, 0), end: Offset.zero),
         const SizedBox(height: 30),
         ListView.builder(
           shrinkWrap: true,
@@ -582,6 +688,7 @@ class _HomeScreenState extends State<HomeScreen> {
               institution: education['institution'],
               duration: education['duration'],
               description: education['description'],
+              index: index,
             );
           },
         ),
@@ -594,6 +701,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required String company,
     required String duration,
     required String description,
+    required int index,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
@@ -651,7 +759,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-    );
+    )
+    .animate(delay: Duration(milliseconds: 200 * index))
+    .fadeIn(duration: 600.ms)
+    .slide(begin: const Offset(0, 0.1), end: Offset.zero);
   }
 
   Widget _educationItem({
@@ -659,6 +770,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required String institution,
     required String duration,
     required String description,
+    required int index,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
@@ -716,7 +828,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-    );
+    )
+    .animate(delay: Duration(milliseconds: 200 * index))
+    .fadeIn(duration: 600.ms)
+    .slide(begin: const Offset(0, 0.1), end: Offset.zero);
   }
 
   // Contact Section
@@ -724,7 +839,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionTitle(title: 'Contact'),
+        const SectionTitle(title: 'Contact')
+            .animate()
+            .fadeIn(duration: 500.ms)
+            .slide(begin: const Offset(-0.1, 0), end: Offset.zero),
         const SizedBox(height: 20),
         Text(
           AppConstants.contactDescription,
@@ -733,13 +851,20 @@ class _HomeScreenState extends State<HomeScreen> {
             fontSize: 16,
             height: 1.6,
           ),
-        ),
+        ).animate().fadeIn(duration: 500.ms).slide(begin: const Offset(0, 0.1), end: Offset.zero),
         const SizedBox(height: 30),
         Container(
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
             color: AppColors.cardColor,
             borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.secondaryColor.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
           child: Column(
             children: [
@@ -756,7 +881,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 style: const TextStyle(color: AppColors.textColor),
-              ),
+              ).animate().fadeIn(delay: 200.ms).slide(begin: const Offset(0, 0.1), end: Offset.zero),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _subjectController,
@@ -771,7 +896,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 style: const TextStyle(color: AppColors.textColor),
-              ),
+              ).animate().fadeIn(delay: 300.ms).slide(begin: const Offset(0, 0.1), end: Offset.zero),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _messageController,
@@ -788,7 +913,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 style: const TextStyle(color: AppColors.textColor),
-              ),
+              ).animate().fadeIn(delay: 400.ms).slide(begin: const Offset(0, 0.1), end: Offset.zero),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
@@ -797,11 +922,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: _sendEmail,
                   width: double.infinity,
                   icon: Icons.send,
-                ),
+                ).animate().fadeIn(delay: 500.ms).scale(),
               ),
             ],
           ),
-        ),
+        ).animate().fadeIn().scale(begin: const Offset(0.95, 0.95), delay: 100.ms),
       ],
     );
   }
@@ -828,4 +953,52 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
+}
+
+// Particle class to represent a single floating particle
+class Particle {
+  Offset position;
+  Offset speed;
+  double radius;
+  
+  Particle({
+    required this.position,
+    required this.speed,
+    required this.radius,
+  });
+}
+
+// Custom painter for drawing particles
+class ParticlesPainter extends CustomPainter {
+  final List<Particle> particles;
+  
+  ParticlesPainter({required this.particles});
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppColors.secondaryColor.withOpacity(0.3)
+      ..style = PaintingStyle.fill;
+    
+    for (var particle in particles) {
+      canvas.drawCircle(particle.position, particle.radius, paint);
+    }
+    
+    // Add connection lines between nearby particles
+    final linePaint = Paint()
+      ..color = AppColors.secondaryColor.withOpacity(0.1)
+      ..strokeWidth = 0.5;
+    
+    for (int i = 0; i < particles.length; i++) {
+      for (int j = i + 1; j < particles.length; j++) {
+        final distance = (particles[i].position - particles[j].position).distance;
+        if (distance < 100) {
+          canvas.drawLine(particles[i].position, particles[j].position, linePaint);
+        }
+      }
+    }
+  }
+  
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 } 
