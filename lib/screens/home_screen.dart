@@ -52,13 +52,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     
-    // Initialize particles
+    // Add a post-frame callback to update section offsets and initialize particles based on screen size
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateSectionOffsets();
+      _initializeParticles();
+    });
+    
+    // Listen to scroll events to update the selected nav item
+    _scrollController.addListener(_updateSelectedIndexBasedOnScroll);
+  }
+  
+  // Initialize particles based on screen size
+  void _initializeParticles() {
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
+    
     _particles = List.generate(
       50, 
       (_) => Particle(
         position: Offset(
-          math.Random().nextDouble() * 1200,
-          math.Random().nextDouble() * 800,
+          math.Random().nextDouble() * screenWidth,
+          math.Random().nextDouble() * screenHeight,
         ),
         speed: Offset(
           (math.Random().nextDouble() - 0.5) * 0.8,
@@ -75,24 +90,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     )..repeat();
     
     _particleController.addListener(() {
+      final size = MediaQuery.of(context).size;
+      final screenWidth = size.width;
+      final screenHeight = size.height;
+      
       for (var particle in _particles) {
         particle.position += particle.speed;
         // Wrap particles around screen edges
-        if (particle.position.dx < 0) particle.position = Offset(1200, particle.position.dy);
-        if (particle.position.dx > 1200) particle.position = Offset(0, particle.position.dy);
-        if (particle.position.dy < 0) particle.position = Offset(particle.position.dx, 800);
-        if (particle.position.dy > 800) particle.position = Offset(particle.position.dx, 0);
+        if (particle.position.dx < 0) particle.position = Offset(screenWidth, particle.position.dy);
+        if (particle.position.dx > screenWidth) particle.position = Offset(0, particle.position.dy);
+        if (particle.position.dy < 0) particle.position = Offset(particle.position.dx, screenHeight);
+        if (particle.position.dy > screenHeight) particle.position = Offset(particle.position.dx, 0);
       }
       setState(() {});
     });
-    
-    // Add a post-frame callback to update section offsets based on screen size
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updateSectionOffsets();
-    });
-    
-    // Listen to scroll events to update the selected nav item
-    _scrollController.addListener(_updateSelectedIndexBasedOnScroll);
   }
   
   @override
@@ -102,7 +113,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // _nameController.dispose();
     // _subjectController.dispose();
     // _messageController.dispose();
-    _particleController.dispose();
+    if (_particleController.isAnimating) {
+      _particleController.dispose();
+    }
     super.dispose();
   }
   
@@ -169,10 +182,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   
   // Show project detail dialog
   void _showProjectDetail(Map<String, dynamic> project) {
-    // Tạo project ID từ tiêu đề dự án (slug)
+    // Create project ID from project title (slug)
     final projectId = project['title'].toString().toLowerCase().replaceAll(' ', '-');
     
-    // Điều hướng tới đường dẫn /project/:id và truyền dữ liệu project
+    // Navigate to /project/:id path and pass project data
     context.goNamed('project-detail', pathParameters: {'id': projectId}, extra: project);
   }
 
@@ -181,33 +194,43 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: _buildAppBar(),
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1200),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 80),
-                _buildHeroSection(),
-                const SizedBox(height: 120),
-                _buildAboutSection(),
-                const SizedBox(height: 80),
-                _buildSkillsSection(),
-                const SizedBox(height: 80),
-                _buildProjectsSection(),
-                const SizedBox(height: 80),
-                _buildExperienceSection(),
-                const SizedBox(height: 80),
-                // _buildContactSection(),
-                // const SizedBox(height: 80),
-                _buildFooter(),
-              ],
+      body: Stack(
+        children: [
+          // Animated background particles covering the entire screen
+          Positioned.fill(
+            child: CustomPaint(
+              painter: ParticlesPainter(particles: _particles),
             ),
           ),
-        ),
+          SingleChildScrollView(
+            controller: _scrollController,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1200),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 80),
+                    _buildHeroSection(),
+                    const SizedBox(height: 80),
+                    _buildAboutSection(),
+                    const SizedBox(height: 80),
+                    _buildSkillsSection(),
+                    const SizedBox(height: 80),
+                    _buildProjectsSection(),
+                    const SizedBox(height: 80),
+                    _buildExperienceSection(),
+                    const SizedBox(height: 80),
+                    // _buildContactSection(),
+                    // const SizedBox(height: 80),
+                    _buildFooter(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -315,94 +338,241 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // Hero Section
   Widget _buildHeroSection() {
-    return Stack(
+    return ResponsiveHelper.responsiveWidget(
+      context: context,
+      mobile: _buildHeroSectionMobile(),
+      tablet: _buildHeroSectionDesktop(),
+      desktop: _buildHeroSectionDesktop(),
+    );
+  }
+
+  Widget _buildHeroSectionMobile() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Animated background particles
-        Positioned.fill(
-          child: CustomPaint(
-            painter: ParticlesPainter(particles: _particles),
+        Text(
+          'Hi, my name is',
+          style: const TextStyle(
+            color: AppColors.secondaryColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        ).animate().fadeIn(duration: 500.ms, delay: 200.ms).slideX(),
+        const SizedBox(height: 20),
+        Text(
+          AppConstants.name,
+          style: TextStyle(
+            color: AppColors.textColor,
+            fontSize: ResponsiveHelper.isMobile(context) ? 40 : 70,
+            fontWeight: FontWeight.bold,
+            height: 1.1,
+          ),
+        ).animate().fadeIn(duration: 500.ms, delay: 400.ms).slideX(),
+        const SizedBox(height: 10),
+        Row(
           children: [
             Text(
-              'Hi, my name is',
-              style: const TextStyle(
-                color: AppColors.secondaryColor,
-                fontSize: 16,
+              "I'm a ",
+              style: TextStyle(
+                color: AppColors.subTextColor,
+                fontSize: ResponsiveHelper.isMobile(context) ? 24 : 40,
                 fontWeight: FontWeight.w500,
               ),
-            ).animate().fadeIn(duration: 500.ms, delay: 200.ms).slideX(),
-            const SizedBox(height: 20),
-            Text(
-              AppConstants.name,
-              style: TextStyle(
-                color: AppColors.textColor,
-                fontSize: ResponsiveHelper.isMobile(context) ? 40 : 70,
-                fontWeight: FontWeight.bold,
-                height: 1.1,
+            ),
+            _buildAnimatedJobTitle(),
+          ],
+        ).animate().fadeIn(duration: 500.ms, delay: 600.ms),
+        const SizedBox(height: 30),
+        SizedBox(
+          width: double.infinity,
+          child: Text(
+            AppConstants.aboutMe,
+            style: const TextStyle(
+              color: AppColors.subTextColor,
+              fontSize: 18,
+              height: 1.6,
+            ),
+          ),
+        ).animate().fadeIn(duration: 500.ms, delay: 800.ms),
+        const SizedBox(height: 30),
+        Center(
+          child: Container(
+            height: 200,
+            width: 200,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.secondaryColor, width: 3),
+            ),
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/profile.jpg',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: AppColors.cardColor,
+                    child: Icon(
+                      Icons.person,
+                      size: 100,
+                      color: AppColors.secondaryColor.withOpacity(0.7),
+                    ),
+                  );
+                },
               ),
-            ).animate().fadeIn(duration: 500.ms, delay: 400.ms).slideX(),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Text(
-                  "I'm a ",
-                  style: TextStyle(
+            ),
+          ).animate().scale(delay: 1000.ms, duration: 500.ms),
+        ),
+        const SizedBox(height: 30),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomButton(
+              text: 'View Project',
+              onPressed: () {
+                setState(() => _selectedIndex = 3); // Projects index
+                _scrollToSection(3);
+              },
+              icon: Icons.arrow_forward,
+            ).animate().scale(delay: 1000.ms),
+            const SizedBox(width: 16),
+            CustomButton(
+              text: 'Download CV',
+              onPressed: () => FileHelper.openAssetFile(
+                AppConstants.cvUrl,
+                AppConstants.cvFileName,
+              ),
+              icon: Icons.download_rounded,
+              outline: true,
+              tooltip: 'Download ${AppConstants.cvFileName}',
+            ).animate().scale(delay: 1200.ms),
+          ],
+        ),
+        const SizedBox(height: 40),
+        Center(
+          child: _buildSocialLinks().animate().fadeIn(delay: 1200.ms),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeroSectionDesktop() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // Left side - Text content
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hi, my name is',
+                style: const TextStyle(
+                  color: AppColors.secondaryColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ).animate().fadeIn(duration: 500.ms, delay: 200.ms).slideX(),
+              const SizedBox(height: 20),
+              Text(
+                AppConstants.name,
+                style: TextStyle(
+                  color: AppColors.textColor,
+                  fontSize: ResponsiveHelper.isMobile(context) ? 40 : 70,
+                  fontWeight: FontWeight.bold,
+                  height: 1.1,
+                ),
+              ).animate().fadeIn(duration: 500.ms, delay: 400.ms).slideX(),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Text(
+                    "I'm a ",
+                    style: TextStyle(
+                      color: AppColors.subTextColor,
+                      fontSize: ResponsiveHelper.isMobile(context) ? 24 : 40,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  _buildAnimatedJobTitle(),
+                ],
+              ).animate().fadeIn(duration: 500.ms, delay: 600.ms),
+              const SizedBox(height: 30),
+              SizedBox(
+                width: 500,
+                child: Text(
+                  AppConstants.aboutMe,
+                  style: const TextStyle(
                     color: AppColors.subTextColor,
-                    fontSize: ResponsiveHelper.isMobile(context) ? 24 : 40,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                    height: 1.6,
                   ),
                 ),
-                _buildAnimatedJobTitle(),
-              ],
-            ).animate().fadeIn(duration: 500.ms, delay: 600.ms),
-            const SizedBox(height: 30),
-            SizedBox(
-              width: ResponsiveHelper.isMobile(context) ? double.infinity : 500,
-              child: Text(
-                AppConstants.aboutMe,
-                style: const TextStyle(
-                  color: AppColors.subTextColor,
-                  fontSize: 18,
-                  height: 1.6,
+              ).animate().fadeIn(duration: 500.ms, delay: 800.ms),
+              const SizedBox(height: 40),
+              Row(
+                children: [
+                  CustomButton(
+                    text: 'View Project',
+                    onPressed: () {
+                      setState(() => _selectedIndex = 3); // Projects index
+                      _scrollToSection(3);
+                    },
+                    icon: Icons.arrow_forward,
+                  ).animate().scale(delay: 1000.ms),
+                  const SizedBox(width: 16),
+                  CustomButton(
+                    text: 'Download CV',
+                    onPressed: () => FileHelper.openAssetFile(
+                      AppConstants.cvUrl,
+                      AppConstants.cvFileName,
+                    ),
+                    icon: Icons.download_rounded,
+                    outline: true,
+                    tooltip: 'Download ${AppConstants.cvFileName}',
+                  ).animate().scale(delay: 1200.ms),
+                ],
+              ),
+              const SizedBox(height: 40),
+              _buildSocialLinks().animate().fadeIn(delay: 1200.ms),
+            ],
+          ),
+        ),
+        
+        // Right side - Profile image
+        Expanded(
+          child: Container(
+            alignment: Alignment.center,
+            child: Container(
+              height: 350,
+              width: 350,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.secondaryColor.withOpacity(0.3),
+                    blurRadius: 30,
+                    spreadRadius: 5,
+                  ),
+                ],
+                border: Border.all(color: AppColors.secondaryColor, width: 5),
+              ),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/profile.jpg',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: AppColors.cardColor,
+                      child: Icon(
+                        Icons.person,
+                        size: 150,
+                        color: AppColors.secondaryColor.withOpacity(0.7),
+                      ),
+                    );
+                  },
                 ),
               ),
-            ).animate().fadeIn(duration: 500.ms, delay: 800.ms),
-            const SizedBox(height: 40),
-            Row(
-              children: [
-                CustomButton(
-                  text: 'Xem Dự Án',
-                  onPressed: () {
-                    setState(() => _selectedIndex = 3); // Projects index
-                    _scrollToSection(3);
-                  },
-                  icon: Icons.arrow_forward,
-                ).animate().scale(delay: 1000.ms),
-                const SizedBox(width: 16),
-                CustomButton(
-                  text: 'Liên Hệ',
-                  onPressed: () {
-                    setState(() => _selectedIndex = 5); // Contact index
-                    _scrollToSection(5);
-                  },
-                  outline: true,
-                ).animate().scale(delay: 1100.ms),
-                const SizedBox(width: 16),
-                CustomButton(
-                  text: 'Tải CV',
-                  onPressed: () => FileHelper.openAssetFile(AppConstants.cvUrl, AppConstants.cvFileName),
-                  icon: Icons.download_rounded,
-                  outline: true,
-                  tooltip: 'Tải ${AppConstants.cvFileName}',
-                ).animate().scale(delay: 1200.ms),
-              ],
-            ),
-            const SizedBox(height: 40),
-            _buildSocialLinks().animate().fadeIn(delay: 1200.ms),
-          ],
+            ).animate().scale(delay: 1000.ms, duration: 800.ms),
+          ),
         ),
       ],
     );
@@ -466,24 +636,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
         const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _infoItem(Icons.email, 'Email', AppConstants.email),
-                _infoItem(Icons.phone, 'Phone', AppConstants.phone),
-                _infoItem(Icons.location_on, 'Location', AppConstants.location),
-              ],
-            ),
-            CustomButton(
-              text: 'Tải CV',
-              onPressed: () => FileHelper.openAssetFile(AppConstants.cvUrl, AppConstants.cvFileName),
-              icon: Icons.download_rounded,
-              outline: true,
-              tooltip: 'Tải ${AppConstants.cvFileName}',
-            ),
+            _infoItem(Icons.email, 'Email', AppConstants.email),
+            _infoItem(Icons.phone, 'Phone', AppConstants.phone),
+            _infoItem(Icons.location_on, 'Location', AppConstants.location),
           ],
         ),
       ],
@@ -495,7 +653,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.secondaryColor, size: 20),
+          Icon(icon, color: AppColors.secondaryColor, size: 30),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

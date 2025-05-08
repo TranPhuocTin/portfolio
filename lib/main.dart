@@ -7,23 +7,23 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:portfolio/constants/app_constants.dart';
 
 void main() {
-  // Cấu hình sử dụng URL path thuần túy thay vì hash (#)
+  // Configure to use pure URL paths instead of hash (#)
   setUrlStrategy(PathUrlStrategy());
   
   runApp(const MyApp());
 }
 
-// Cấu hình GoRouter
+// Configure GoRouter
 final GoRouter _router = GoRouter(
   routes: [
-    // Trang chính
+    // Home page
     GoRoute(
       path: '/',
       name: 'home',
       builder: (context, state) => const HomeScreen(),
     ),
     
-    // Trang chi tiết dự án
+    // Project detail page
     GoRoute(
       path: '/project/:id',
       name: 'project-detail',
@@ -31,27 +31,27 @@ final GoRouter _router = GoRouter(
         final projectId = state.pathParameters['id']!;
         final projectData = state.extra as Map<String, dynamic>?;
         
-        // Trường hợp điều hướng từ trang chủ, chúng ta đã chuyển data qua extra
+        // When navigating from home page, we've passed data via extra
         if (projectData != null) {
           return ProjectDetailScreen(project: projectData);
         }
         
-        // Tìm project từ id trong danh sách dự án đã biết
+        // Find project from id in the known project list
         final projectFromId = _findProjectById(projectId);
         if (projectFromId != null) {
           return ProjectDetailScreen(project: projectFromId);
         }
         
-        // Trở về trang chủ nếu không tìm thấy
+        // Return to home page if not found
         return const HomeScreen();
       },
     ),
   ],
-  // Xử lý các URL không tồn tại
+  // Handle non-existent URLs
   errorBuilder: (context, state) => const HomeScreen(),
 );
 
-// Helper function để tìm project từ slug
+// Helper function to find project from slug
 Map<String, dynamic>? _findProjectById(String id) {
   final normalizedId = id.toLowerCase();
   

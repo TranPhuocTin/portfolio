@@ -65,7 +65,7 @@ class ProjectDetailScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Project description
-                _buildSectionTitle('Mô tả dự án', Icons.description)
+                _buildSectionTitle('Project Description', Icons.description)
                     .animate()
                     .fadeIn(delay: 100.ms),
                 const SizedBox(height: 16),
@@ -75,7 +75,7 @@ class ProjectDetailScreen extends StatelessWidget {
                 const SizedBox(height: 40),
                 
                 // Project goals
-                _buildSectionTitle('Mục tiêu dự án', Icons.flag)
+                _buildSectionTitle('Project Goals', Icons.flag)
                     .animate()
                     .fadeIn(delay: 300.ms),
                 const SizedBox(height: 16),
@@ -86,7 +86,7 @@ class ProjectDetailScreen extends StatelessWidget {
                 const SizedBox(height: 40),
                 
                 // Features
-                _buildSectionTitle('Chức năng chính', Icons.star)
+                _buildSectionTitle('Main Features', Icons.star)
                     .animate()
                     .fadeIn(delay: 500.ms),
                 const SizedBox(height: 16),
@@ -115,7 +115,7 @@ class ProjectDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Technologies
-              _buildSectionTitle('Công nghệ sử dụng', Icons.code)
+              _buildSectionTitle('Technologies Used', Icons.code)
                   .animate()
                   .fadeIn(delay: 700.ms),
               const SizedBox(height: 16),
@@ -150,7 +150,7 @@ class ProjectDetailScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Project description
-        _buildSectionTitle('Mô tả dự án', Icons.description)
+        _buildSectionTitle('Project Description', Icons.description)
             .animate()
             .fadeIn(delay: 100.ms),
         const SizedBox(height: 16),
@@ -160,7 +160,7 @@ class ProjectDetailScreen extends StatelessWidget {
         const SizedBox(height: 32),
         
         // Project goals
-        _buildSectionTitle('Mục tiêu dự án', Icons.flag)
+        _buildSectionTitle('Project Goals', Icons.flag)
             .animate()
             .fadeIn(delay: 300.ms),
         const SizedBox(height: 16),
@@ -171,7 +171,7 @@ class ProjectDetailScreen extends StatelessWidget {
         const SizedBox(height: 32),
         
         // Technologies
-        _buildSectionTitle('Công nghệ sử dụng', Icons.code)
+        _buildSectionTitle('Technologies Used', Icons.code)
             .animate()
             .fadeIn(delay: 600.ms),
         const SizedBox(height: 16),
@@ -181,7 +181,7 @@ class ProjectDetailScreen extends StatelessWidget {
         const SizedBox(height: 32),
         
         // Features
-        _buildSectionTitle('Chức năng chính', Icons.star)
+        _buildSectionTitle('Main Features', Icons.star)
             .animate()
             .fadeIn(delay: 800.ms),
         const SizedBox(height: 16),
@@ -242,7 +242,7 @@ class ProjectDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Chưa có ảnh chụp màn hình cho dự án này',
+              'No screenshots available for this project',
               style: TextStyle(
                 color: AppColors.textColor,
                 fontSize: 16,
@@ -252,7 +252,7 @@ class ProjectDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Hãy thêm ảnh vào thư mục assets/images/projects và cập nhật trong app_constants.dart',
+              'Please add images to the assets/images/projects folder and update in app_constants.dart',
               style: TextStyle(
                 color: AppColors.subTextColor,
                 fontSize: 14,
@@ -631,7 +631,7 @@ class ProjectDetailScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Text(
-                                  'Hình ảnh mẫu',
+                                  'Sample Image',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 24,
@@ -640,7 +640,7 @@ class ProjectDetailScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 16),
                                 const Text(
-                                  'Thay thế bằng ảnh thực tế của tính năng',
+                                  'Replace with actual feature image',
                                   style: TextStyle(
                                     color: Colors.white70,
                                     fontSize: 14,
@@ -813,7 +813,7 @@ class ProjectDetailScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Links nhanh',
+                'Quick Links',
                 style: TextStyle(
                   color: AppColors.textColor,
                   fontSize: 18,
@@ -846,7 +846,7 @@ class ProjectDetailScreen extends StatelessWidget {
           // if (project['apk_download'] != null) ...[
           //   const Divider(color: AppColors.primaryColor),
           //   _buildQuickLinkItem(
-          //     'Tải APK',
+          //     'Download APK',
           //     Icons.android,
           //     () => UrlLauncherHelper.launchURL(project['apk_download'], inNewTab: true, enableDomStorage: true),
           //   ),
@@ -923,7 +923,7 @@ class ProjectDetailScreen extends StatelessWidget {
 
   List<Widget> _buildProjectGoals(Map<String, dynamic> project) {
     final goals = project['goals'] as List<String>? ?? 
-      ['Phát triển ứng dụng thực tế', 'Nâng cao kỹ năng lập trình'];
+      ['Develop real-world application', 'Improve programming skills'];
     
     return goals.map((goal) => Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -982,7 +982,7 @@ class ProjectDetailScreen extends StatelessWidget {
 
   List<Widget> _buildProjectFeatures(Map<String, dynamic> project) {
     final features = project['features'] as List<String>? ?? 
-                   ['Giao diện người dùng thân thiện', 'Hiệu suất tối ưu'];
+                   ['User-friendly interface', 'Optimized performance'];
     
     return features.map((feature) => Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -1038,7 +1038,7 @@ class ProjectDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           const Text(
-            'Tải và trải nghiệm ngay!',
+            'Download and experience now!',
             style: TextStyle(
               color: AppColors.textColor,
               fontSize: 20,
@@ -1047,7 +1047,7 @@ class ProjectDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Bạn có thể tải file APK để cài đặt và trải nghiệm ứng dụng này trực tiếp trên thiết bị Android của mình.',
+            'You can download the APK file to install and experience this application directly on your Android device.',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: AppColors.subTextColor,
@@ -1057,7 +1057,7 @@ class ProjectDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           CustomButton(
-            text: 'Tải xuống APK',
+            text: 'Download APK',
             onPressed: () => UrlLauncherHelper.launchURL(project['apk_download'], inNewTab: true, enableDomStorage: true),
             width: 200,
             icon: Icons.download,

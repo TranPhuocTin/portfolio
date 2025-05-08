@@ -3,6 +3,21 @@ import 'package:portfolio/constants/app_colors.dart';
 
 class ImagePlaceholder {
   static Widget buildProjectImage(String imagePath, String title) {
+    // Kiểm tra nếu là Roomily logo để xử lý đặc biệt
+    if (imagePath.contains('roomily_logo')) {
+      return Container(
+        color: Colors.white,
+        child: Transform.scale(
+          scale: 1.3, // Phóng to hình ảnh 130%
+          child: Image.asset(
+            imagePath,
+            fit: BoxFit.contain,
+          ),
+        ),
+      );
+    }
+    
+    // Các hình ảnh khác vẫn dùng code cũ
     return Image.asset(
       imagePath,
       fit: BoxFit.contain,

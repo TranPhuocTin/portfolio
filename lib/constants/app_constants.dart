@@ -3,11 +3,11 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AppConstants {
   // Portfolio Information
-  static const String name = "Trần Phước Tín";
+  static const String name = "Tran Phuoc Tin";
   static const String title = "Flutter Developer";
   static const String email = "phuoctin74@gmail.com";
   static const String phone = "+84 70 802 50 65";
-  static const String location = "Đà Nẵng, Việt Nam";
+  static const String location = "Da Nang, Vietnam";
   
   // CV Download
   static const String cvFileName = "TranPhuocTin_CV.pdf";
@@ -24,9 +24,9 @@ class AppConstants {
   
   // About Me
   static const String aboutMe = 
-    "Tôi là một Flutter Developer với niềm đam mê tạo ra các ứng dụng di động đẹp và hiệu quả. "
-    "Với kinh nghiệm trong phát triển ứng dụng cross-platform, tôi luôn tìm kiếm các cách để cải thiện"
-    " kỹ năng và học hỏi công nghệ mới. Tôi có khả năng làm việc độc lập cũng như làm việc nhóm hiệu quả.";
+    "I am a Flutter Developer with a passion for creating beautiful and efficient mobile applications. "
+    "With experience in cross-platform application development, I am always looking for ways to improve "
+    "my skills and learn new technologies. I have the ability to work independently as well as effectively in a team.";
   
   // Skills
   static const List<String> skills = [
@@ -39,14 +39,14 @@ class AppConstants {
   ];
   
   // Projects
-  // Đối với các hình ảnh, sử dụng thuộc tính 'path' thay vì 'color' để hiển thị ảnh thực tế
-  // Ví dụ: {'path': 'assets/images/projects/roomily_main.png', 'caption': 'Màn hình chính'}
-  // Đường dẫn ảnh nên được đặt trong thư mục assets/images/projects/
-  // Nếu không có ảnh thực tế, hệ thống sẽ hiển thị một màu placeholder
+  // For images, use the 'path' property instead of 'color' to display actual images
+  // Example: {'path': 'assets/images/projects/roomily_main.png', 'caption': 'Main Screen'}
+  // Image paths should be placed in the assets/images/projects/ folder
+  // If there is no actual image, the system will display a placeholder color
   static const List<Map<String, dynamic>> projects = [
     {
        "title": "Roomily",
-  "description": "Ứng dụng quản lý phòng trọ toàn diện với hai đối tượng chính: chủ nhà và người thuê. Cung cấp các tính năng đăng và thuê phòng, quản lý hợp đồng, thanh toán hóa đơn, tìm bạn cùng phòng, và hệ thống thông báo thời gian thực.",
+  "description": "Comprehensive room rental management application with two main user types: landlords and tenants. Provides features for posting and renting rooms, contract management, bill payments, finding roommates, and real-time notification system.",
   "technologies": ["Flutter", "Firebase", "Bloc/Cubit", "Websocket", "Google Maps API"],
   "technologies_detail": [
     "Flutter", "Dart", "Bloc/Cubit", "Firebase Core", 
@@ -55,27 +55,27 @@ class AppConstants {
     "Provider", "Go Router", "Dio", "JSON Serializable"
   ],
   "goals": [
-    "Kết nối chủ nhà và người thuê hiệu quả thông qua nền tảng dễ sử dụng",
-    "Tự động hóa quản lý hóa đơn, thanh toán và thông báo",
-    "Tối ưu trải nghiệm tìm kiếm và thuê phòng với bản đồ và bộ lọc nâng cao",
-    "Hỗ trợ tìm bạn cùng phòng và chia sẻ chi phí",
-    "Cung cấp công cụ lập kế hoạch ngân sách cho người thuê"
+    "Connect landlords and tenants effectively through an easy-to-use platform",
+    "Automate bill management, payments, and notifications",
+    "Optimize room search and rental experience with maps and advanced filters",
+    "Support finding roommates and cost sharing",
+    "Provide budgeting tools for tenants"
   ],
   "features": [
-    "Đăng ký và đăng nhập với hai vai trò riêng biệt: chủ nhà hoặc người thuê",
-    "Đăng phòng, tìm kiếm và lọc phòng theo vị trí, giá, tiện nghi",
-    "Xem phòng trên bản đồ với thông tin chi tiết",
-    "Hệ thống chat thời gian thực giữa chủ nhà và người thuê",
-    "Tạo, quản lý và xem hợp đồng thuê nhà",
-    "Thanh toán hóa đơn (điện, nước, internet) qua mã QR",
-    "Đăng và tìm kiếm bạn cùng phòng với thông tin chi tiết",
-    "Quản lý danh sách phòng yêu thích",
-    "Đánh giá phòng và chủ nhà",
-    "Lập kế hoạch ngân sách chi tiêu cho người thuê",
-    "Chức năng quảng cáo phòng cho chủ nhà",
-    "Thống kê và báo cáo thu chi cho chủ nhà",
-    "Hệ thống thông báo đẩy về thanh toán, gia hạn hợp đồng",
-    "Quản lý ví và giao dịch cho cả hai đối tượng"
+    "Registration and login with two distinct roles: landlord or tenant",
+    "Post rooms, search and filter rooms by location, price, amenities",
+    "View rooms on a map with detailed information",
+    "Real-time chat system between landlords and tenants",
+    "Create, manage and view rental contracts",
+    "Pay bills (electricity, water, internet) via QR code",
+    "Post and search for roommates with detailed information",
+    "Manage favorite room listings",
+    "Rate rooms and landlords",
+    "Detailed budget planning for tenants",
+    "Room advertising features for landlords",
+    "Income and expense statistics and reports for landlords",
+    "Push notifications for payments, contract renewals",
+    "Wallet and transaction management for both user types"
   ],
       'github': 'https://github.com/TranPhuocTin/roomily-app',
       'live': 'https://example.com/roomily-app',
@@ -83,140 +83,140 @@ class AppConstants {
       'apk_download': 'https://drive.google.com/drive/folders/1fEQkawlaaq6ghK8jYVIqqWl14ZO9p-9w?usp=drive_link',
       'screenshots': [
         {
-          'section': 'Trang chủ',
-          'description': 'Giao diện dành cho người thuê và chủ trọ',
+          'section': 'Home',
+          'description': 'Interface for tenants and landlords',
           'icon': 'home',
           'images': [
-            {'path': 'assets/images/projects/tenant_home_screen.jpg', 'caption': 'Trang chủ người thuê'},
-            {'path': 'assets/images/projects/landlord_home_1.jpg', 'caption': 'Trang chủ chủ trọ'},
-            {'path': 'assets/images/projects/landlord_home_2.jpg', 'caption': 'Bảng điều khiển chủ trọ'},
+            {'path': 'assets/images/projects/tenant_home_screen.jpg', 'caption': 'Tenant home screen'},
+            {'path': 'assets/images/projects/landlord_home_1.jpg', 'caption': 'Landlord home screen'},
+            {'path': 'assets/images/projects/landlord_home_2.jpg', 'caption': 'Landlord dashboard'},
           ]
         },
         {
-          'section': 'Tìm kiếm phòng',
-          'description': 'Tính năng tìm kiếm và lọc phòng trọ theo vị trí và tiêu chí',
+          'section': 'Room Search',
+          'description': 'Room search and filter features by location and criteria',
           'icon': 'search',
           'images': [
-            {'path': 'assets/images/projects/search_screen_1.jpg', 'caption': 'Tìm kiếm cơ bản'},
-            {'path': 'assets/images/projects/search_screen_2.jpg', 'caption': 'Bộ lọc nâng cao'},
-            {'path': 'assets/images/projects/search_screen_3.jpg', 'caption': 'Kết quả tìm kiếm'},
-            {'path': 'assets/images/projects/map_screen.jpg', 'caption': 'Tìm kiếm trên bản đồ'},
+            {'path': 'assets/images/projects/search_screen_1.jpg', 'caption': 'Basic search'},
+            {'path': 'assets/images/projects/search_screen_2.jpg', 'caption': 'Advanced filters'},
+            {'path': 'assets/images/projects/search_screen_3.jpg', 'caption': 'Search results'},
+            {'path': 'assets/images/projects/map_screen.jpg', 'caption': 'Map search'},
           ]
         },
         {
-          'section': 'Tìm bạn cùng phòng',
-          'description': 'Tính năng kết nối người thuê để ở ghép, giảm chi phí thuê phòng',
+          'section': 'Find Roommates',
+          'description': 'Feature to connect tenants for shared accommodation, reducing rental costs',
           'icon': 'group',
           'images': [
-            {'path': 'assets/images/projects/find_partner_1.jpg', 'caption': 'Danh sách người tìm ở ghép'},
-            {'path': 'assets/images/projects/find_partner_2.jpg', 'caption': 'Bộ lọc tìm bạn cùng phòng'},
-            {'path': 'assets/images/projects/find_partner_3.jpg', 'caption': 'Chi tiết hồ sơ'},
-            {'path': 'assets/images/projects/find_partner_4.jpg', 'caption': 'Sở thích và thói quen'},
-            {'path': 'assets/images/projects/find_partner_5.jpg', 'caption': 'Yêu cầu về phòng ở'},
-            {'path': 'assets/images/projects/find_partner_6.jpg', 'caption': 'Tạo hồ sơ tìm bạn cùng phòng'},
-            {'path': 'assets/images/projects/find_partner_7.jpg', 'caption': 'Các đề xuất phù hợp'},
-            {'path': 'assets/images/projects/find_partner_8.jpg', 'caption': 'Thông báo phù hợp'},
-            {'path': 'assets/images/projects/find_partner_9.jpg', 'caption': 'Đánh giá mức độ hợp nhau'},
-            {'path': 'assets/images/projects/find_partner_10.jpg', 'caption': 'Liên hệ với bạn cùng phòng'},
+            {'path': 'assets/images/projects/find_partner_1.jpg', 'caption': 'Roommate listings'},
+            {'path': 'assets/images/projects/find_partner_2.jpg', 'caption': 'Roommate filters'},
+            {'path': 'assets/images/projects/find_partner_3.jpg', 'caption': 'Profile details'},
+            {'path': 'assets/images/projects/find_partner_4.jpg', 'caption': 'Preferences and habits'},
+            {'path': 'assets/images/projects/find_partner_5.jpg', 'caption': 'Room requirements'},
+            {'path': 'assets/images/projects/find_partner_6.jpg', 'caption': 'Create roommate profile'},
+            {'path': 'assets/images/projects/find_partner_7.jpg', 'caption': 'Matching suggestions'},
+            {'path': 'assets/images/projects/find_partner_8.jpg', 'caption': 'Match notifications'},
+            {'path': 'assets/images/projects/find_partner_9.jpg', 'caption': 'Compatibility rating'},
+            {'path': 'assets/images/projects/find_partner_10.jpg', 'caption': 'Contact roommate'},
           ]
         },
         {
-          'section': 'Quản lý phòng trọ',
-          'description': 'Quản lý danh sách phòng trọ và thêm phòng mới',
+          'section': 'Room Management',
+          'description': 'Manage room listings and add new rooms',
           'icon': 'apartment',
           'images': [
-            {'path': 'assets/images/projects/room_screen.jpg', 'caption': 'Danh sách phòng'},
-            {'path': 'assets/images/projects/landlord_add_room_1.jpg', 'caption': 'Tạo phòng mới'},
-            {'path': 'assets/images/projects/landlord_add_room_2.jpg', 'caption': 'Thêm thông tin cơ bản'},
-            {'path': 'assets/images/projects/landlord_add_room_3.jpg', 'caption': 'Cài đặt tiện ích phòng'},
-            {'path': 'assets/images/projects/landlord_add_room_4.jpg', 'caption': 'Thêm hình ảnh phòng'},
-            {'path': 'assets/images/projects/landlord_add_room_5.jpg', 'caption': 'Cài đặt giá và điều kiện'},
+            {'path': 'assets/images/projects/room_screen.jpg', 'caption': 'Room list'},
+            {'path': 'assets/images/projects/landlord_add_room_1.jpg', 'caption': 'Create new room'},
+            {'path': 'assets/images/projects/landlord_add_room_2.jpg', 'caption': 'Add basic information'},
+            {'path': 'assets/images/projects/landlord_add_room_3.jpg', 'caption': 'Set room amenities'},
+            {'path': 'assets/images/projects/landlord_add_room_4.jpg', 'caption': 'Add room images'},
+            {'path': 'assets/images/projects/landlord_add_room_5.jpg', 'caption': 'Set prices and conditions'},
           ]
         },
         {
-          'section': 'Chi tiết phòng',
-          'description': 'Xem thông tin chi tiết về phòng trọ',
+          'section': 'Room Details',
+          'description': 'View detailed information about rooms',
           'icon': 'visibility',
           'images': [
-            {'path': 'assets/images/projects/room_detail_1.jpg', 'caption': 'Thông tin cơ bản'},
-            {'path': 'assets/images/projects/room_detail_2.jpg', 'caption': 'Tiện ích và mô tả'},
-            {'path': 'assets/images/projects/room_detail_3.jpg', 'caption': 'Vị trí và đánh giá'},
+            {'path': 'assets/images/projects/room_detail_1.jpg', 'caption': 'Basic information'},
+            {'path': 'assets/images/projects/room_detail_2.jpg', 'caption': 'Amenities and description'},
+            {'path': 'assets/images/projects/room_detail_3.jpg', 'caption': 'Location and reviews'},
           ]
         },
         {
-          'section': 'Thanh toán và hóa đơn',
-          'description': 'Hệ thống quản lý và thanh toán hóa đơn tiện ích',
+          'section': 'Payments and Bills',
+          'description': 'Utility bill management and payment system',
           'icon': 'payment',
           'images': [
-            {'path': 'assets/images/projects/bill_1.jpg', 'caption': 'Danh sách hóa đơn'},
-            {'path': 'assets/images/projects/bill_2.jpg', 'caption': 'Chi tiết hóa đơn'},
-            {'path': 'assets/images/projects/bill_3.jpg', 'caption': 'Xác nhận thanh toán'},
-            {'path': 'assets/images/projects/bill_4.jpg', 'caption': 'Lịch sử thanh toán'},
-            {'path': 'assets/images/projects/bill_5.jpg', 'caption': 'Thông báo thanh toán'},
-            {'path': 'assets/images/projects/bill_6.jpg', 'caption': 'Chọn phương thức thanh toán'},
-            {'path': 'assets/images/projects/bill_7.jpg', 'caption': 'Thanh toán QR code'},
-            {'path': 'assets/images/projects/bill_8.jpg', 'caption': 'Báo cáo tài chính'},
-            {'path': 'assets/images/projects/bill_9.jpg', 'caption': 'Thống kê chi tiêu'},
+            {'path': 'assets/images/projects/bill_1.jpg', 'caption': 'Bill list'},
+            {'path': 'assets/images/projects/bill_2.jpg', 'caption': 'Bill details'},
+            {'path': 'assets/images/projects/bill_3.jpg', 'caption': 'Payment confirmation'},
+            {'path': 'assets/images/projects/bill_4.jpg', 'caption': 'Payment history'},
+            {'path': 'assets/images/projects/bill_5.jpg', 'caption': 'Payment notifications'},
+            {'path': 'assets/images/projects/bill_6.jpg', 'caption': 'Select payment method'},
+            {'path': 'assets/images/projects/bill_7.jpg', 'caption': 'QR code payment'},
+            {'path': 'assets/images/projects/bill_8.jpg', 'caption': 'Financial report'},
+            {'path': 'assets/images/projects/bill_9.jpg', 'caption': 'Expense statistics'},
           ]
         },
         {
-          'section': 'Hợp đồng thuê phòng',
-          'description': 'Quản lý hợp đồng điện tử giữa chủ trọ và người thuê',
+          'section': 'Rental Contracts',
+          'description': 'Electronic contract management between landlords and tenants',
           'icon': 'description',
           'images': [
-            {'path': 'assets/images/projects/contract 1.jpg', 'caption': 'Danh sách hợp đồng'},
-            {'path': 'assets/images/projects/contract_2.jpg', 'caption': 'Chi tiết hợp đồng'},
-            {'path': 'assets/images/projects/contract_3.jpg', 'caption': 'Ký kết hợp đồng'},
+            {'path': 'assets/images/projects/contract 1.jpg', 'caption': 'Contract list'},
+            {'path': 'assets/images/projects/contract_2.jpg', 'caption': 'Contract details'},
+            {'path': 'assets/images/projects/contract_3.jpg', 'caption': 'Contract signing'},
           ]
         },
         {
-          'section': 'Trò chuyện',
-          'description': 'Hệ thống nhắn tin trực tiếp giữa chủ trọ và người thuê',
+          'section': 'Chat',
+          'description': 'Direct messaging system between landlords and tenants',
           'icon': 'chat',
           'images': [
-            {'path': 'assets/images/projects/chat_screen_1.jpg', 'caption': 'Danh sách trò chuyện'},
-            {'path': 'assets/images/projects/chat_screen_2.jpg', 'caption': 'Cửa sổ chat'},
-            {'path': 'assets/images/projects/chat_screen_3.jpg', 'caption': 'Gửi hình ảnh'},
-            {'path': 'assets/images/projects/chat_screen_4.jpg', 'caption': 'Chat nhóm'},
-            {'path': 'assets/images/projects/chat_screen_5.jpg', 'caption': 'Tìm kiếm tin nhắn'},
-            {'path': 'assets/images/projects/chat_screen_6.jpg', 'caption': 'Chia sẻ thông tin phòng'},
+            {'path': 'assets/images/projects/chat_screen_1.jpg', 'caption': 'Chat list'},
+            {'path': 'assets/images/projects/chat_screen_2.jpg', 'caption': 'Chat window'},
+            {'path': 'assets/images/projects/chat_screen_3.jpg', 'caption': 'Send images'},
+            {'path': 'assets/images/projects/chat_screen_4.jpg', 'caption': 'Group chat'},
+            {'path': 'assets/images/projects/chat_screen_5.jpg', 'caption': 'Search messages'},
+            {'path': 'assets/images/projects/chat_screen_6.jpg', 'caption': 'Share room information'},
           ]
         },
         {
-          'section': 'Chiến dịch & Quảng cáo',
-          'description': 'Tính năng quảng bá phòng trọ, ưu đãi và chiến dịch khuyến mãi',
+          'section': 'Campaigns & Advertising',
+          'description': 'Room promotion features, offers and promotional campaigns',
           'icon': 'campaign',
           'images': [
-            {'path': 'assets/images/projects/campaign_1.jpg', 'caption': 'Danh sách chiến dịch'},
-            {'path': 'assets/images/projects/campaign_2.jpg', 'caption': 'Tạo chiến dịch mới'},
-            {'path': 'assets/images/projects/campaign_3.jpg', 'caption': 'Thống kê hiệu quả'},
-            {'path': 'assets/images/projects/campaign_4.jpg', 'caption': 'Cài đặt đối tượng'},
+            {'path': 'assets/images/projects/campaign_1.jpg', 'caption': 'Campaign list'},
+            {'path': 'assets/images/projects/campaign_2.jpg', 'caption': 'Create new campaign'},
+            {'path': 'assets/images/projects/campaign_3.jpg', 'caption': 'Performance statistics'},
+            {'path': 'assets/images/projects/campaign_4.jpg', 'caption': 'Target audience settings'},
           ]
         },
         {
-          'section': 'Hồ sơ cá nhân',
-          'description': 'Quản lý thông tin cá nhân và cài đặt tài khoản',
+          'section': 'Profile',
+          'description': 'Manage personal information and account settings',
           'icon': 'person',
           'images': [
-            {'path': 'assets/images/projects/profile_screen_1.jpg', 'caption': 'Thông tin cá nhân'},
-            {'path': 'assets/images/projects/profile_screen_2.jpg', 'caption': 'Chỉnh sửa hồ sơ'},
-            {'path': 'assets/images/projects/profile_screen_3.jpg', 'caption': 'Cài đặt riêng tư'},
-            {'path': 'assets/images/projects/profile_screen_4.jpg', 'caption': 'Quản lý tài khoản'},
+            {'path': 'assets/images/projects/profile_screen_1.jpg', 'caption': 'Personal information'},
+            {'path': 'assets/images/projects/profile_screen_2.jpg', 'caption': 'Edit profile'},
+            {'path': 'assets/images/projects/profile_screen_3.jpg', 'caption': 'Privacy settings'},
+            {'path': 'assets/images/projects/profile_screen_4.jpg', 'caption': 'Account management'},
           ]
         },
         {
-          'section': 'Thông báo',
-          'description': 'Hệ thống thông báo về các sự kiện, thanh toán và tin nhắn mới',
+          'section': 'Notifications',
+          'description': 'Notification system for events, payments and new messages',
           'icon': 'notifications',
           'images': [
-            {'path': 'assets/images/projects/notification.jpg', 'caption': 'Trung tâm thông báo'},
+            {'path': 'assets/images/projects/notification.jpg', 'caption': 'Notification center'},
           ]
         }
       ]
     },
     {
       'title': 'Exam Guard',
-      'description': 'Ứng dụng giám sát thi cử sử dụng công nghệ AI để phát hiện các hành vi gian lận và đảm bảo tính công bằng trong quá trình kiểm tra trực tuyến.',
+      'description': 'Exam monitoring application using AI technology to detect cheating behaviors and ensure fairness in online testing.',
       'technologies': ['Flutter', 'Websocket', 'ML Kit API', 'Bloc/Cubit'],
        "technologies_detail": [
           "Flutter", "Dart", "Bloc/Cubit", "Google ML Kit", 
@@ -224,20 +224,20 @@ class AppConstants {
           "Socket.IO", "JSON Serialization"
         ],
         "goals": [
-          "Xây dựng hệ thống giám sát thi cử trực tuyến hiệu quả",
-          "Sử dụng AI để phát hiện hành vi gian lận tự động",
-          "Tạo môi trường thi cử công bằng cho tất cả thí sinh",
-          "Giảm thiểu nhu cầu giám sát thủ công của giáo viên"
+          "Build an effective online exam monitoring system",
+          "Use AI to automatically detect cheating behavior",
+          "Create a fair testing environment for all candidates",
+          "Reduce the need for manual supervision by teachers"
         ],
         "features": [
-          "Face detection để xác minh danh tính thí sinh",
-          "Theo dõi chuyển động mắt để phát hiện hành động đáng ngờ",
-          "Phát hiện khi có người khác xuất hiện trong khung hình",
-          "Phân tích âm thanh để phát hiện tiếng nói hoặc tiếng ồn",
-          "Chụp màn hình ngẫu nhiên để kiểm tra hoạt động",
-          "Báo cáo chi tiết về các hành vi đáng ngờ",
-          "Dashboard cho giáo viên theo dõi nhiều thí sinh cùng lúc",
-          "Khả năng hoạt động với băng thông thấp"
+          "Face detection to verify candidate identity",
+          "Eye movement tracking to detect suspicious actions",
+          "Detection when another person appears in the frame",
+          "Audio analysis to detect speech or noise",
+          "Random screenshots to check activities",
+          "Detailed reports on suspicious behaviors",
+          "Dashboard for teachers to monitor multiple candidates simultaneously",
+          "Ability to operate with low bandwidth"
         ],
       'github': 'https://github.com/TranPhuocTin/ExamGuardApp',
       'live': 'https://example.com/exam-guard',
@@ -252,30 +252,30 @@ class AppConstants {
       'position': 'Intern',
       'company': 'Fpt Software',
       'duration': 'Jan 2025 - May 2025',
-      'description': 'Tham gia các khóa đào tạo về Java và Spring Boot; phát triển, duy trì ứng dụng chính của dự án được giao, phối hợp cùng nhóm để hoàn thiện các tính năng quan trọng; tích lũy kinh nghiệm thực tế về lập trình mobile và backend, review code và quy trình làm việc agile..',
+      'description': 'Participated in Java and Spring Boot training courses; developed and maintained the main application of the assigned project, collaborated with the team to complete important features; gained practical experience in mobile and backend programming, code review and agile work processes.',
     },
   ];
   
   // Education
   static const List<Map<String, dynamic>> education = [
     {
-      'degree': 'Kỹ sư Công nghệ Thông tin',
-      'institution': 'Đại học Duy Tân',
+      'degree': 'Bachelor of Information Technology',
+      'institution': 'Duy Tan University',
       'duration': '2021 - 2025',
-      'description': 'Chuyên ngành Công Nghệ Phần mềm. GPA: 3.65/4.0',
+      'description': 'Software Engineering major. GPA: 3.65/4.0',
     },
   ];
   
   // Services
   static const List<Map<String, String>> services = [
     {
-      'title': 'Phát triển Ứng dụng Di động',
-      'description': 'Tạo ứng dụng di động hiệu suất cao, đáp ứng cho iOS và Android bằng Flutter.',
+      'title': 'Mobile App Development',
+      'description': 'Create high-performance, responsive mobile applications for iOS and Android using Flutter.',
       'icon': 'assets/icons/mobile.svg',
     },
     {
-      'title': 'Tích hợp Backend',
-      'description': 'Kết nối ứng dụng di động với backend như Firebase, REST API, GraphQL.',
+      'title': 'Backend Integration',
+      'description': 'Connect mobile applications with backends like Firebase, REST API, GraphQL.',
       'icon': 'assets/icons/backend.svg',
     },
   ];
@@ -283,19 +283,19 @@ class AppConstants {
   // Testimonials
   static const List<Map<String, String>> testimonials = [
     {
-      'name': 'Nguyễn Văn A',
+      'name': 'Nguyen Van A',
       'position': 'CEO, Tech Company A',
-      'testimonial': 'Một developer tuyệt vời với kỹ năng Flutter chuyên nghiệp. Luôn hoàn thành công việc đúng hạn và với chất lượng cao.',
+      'testimonial': 'An excellent developer with professional Flutter skills. Always completes work on time and with high quality.',
       'image': 'assets/images/testimonial1.jpg',
     },
     {
-      'name': 'Trần Thị B',
+      'name': 'Tran Thi B',
       'position': 'Project Manager, Tech Company B',
-      'testimonial': 'Làm việc với bạn là một trải nghiệm tuyệt vời. Bạn không chỉ là một developer giỏi mà còn là một người đồng nghiệp tuyệt vời.',
+      'testimonial': 'Working with you was a wonderful experience. You are not only a great developer but also an excellent colleague.',
       'image': 'assets/images/testimonial2.jpg',
     },
   ];
   
   // Contact
-  static const String contactDescription = 'Hãy liên hệ với tôi nếu bạn có bất kỳ câu hỏi nào hoặc muốn thảo luận về dự án của bạn.';
+  static const String contactDescription = 'Please contact me if you have any questions or want to discuss your project.';
 } 
