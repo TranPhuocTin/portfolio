@@ -45,8 +45,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int _selectedIndex = 0;
 
   // List of particles for background effect
-  late List<Particle> _particles;
-  late AnimationController _particleController;
+  List<Particle> _particles = [];
+  AnimationController? _particleController;
+
+  // 3D cube animation
+  late AnimationController _cubeController;
+  bool _hasInitializedCube = false;
 
   @override
   void initState() {
@@ -56,6 +60,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateSectionOffsets();
       _initializeParticles();
+      
+      // Initialize cube controller
+      _cubeController = AnimationController(
+        vsync: this,
+        duration: const Duration(seconds: 15),
+      )..repeat();
+      _hasInitializedCube = true;
     });
     
     // Listen to scroll events to update the selected nav item
@@ -89,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 30), // ~60fps
     )..repeat();
     
-    _particleController.addListener(() {
+    _particleController?.addListener(() {
       final size = MediaQuery.of(context).size;
       final screenWidth = size.width;
       final screenHeight = size.height;
@@ -113,8 +124,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // _nameController.dispose();
     // _subjectController.dispose();
     // _messageController.dispose();
-    if (_particleController.isAnimating) {
-      _particleController.dispose();
+    if (_hasInitializedCube) {
+      _cubeController.dispose();
+    }
+    if (_particleController != null && _particleController!.isAnimating) {
+      _particleController!.dispose();
     }
     super.dispose();
   }
@@ -197,11 +211,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       body: Stack(
         children: [
           // Animated background particles covering the entire screen
-          Positioned.fill(
-            child: CustomPaint(
-              painter: ParticlesPainter(particles: _particles),
+          if (_particles.isNotEmpty)
+            Positioned.fill(
+              child: CustomPaint(
+                painter: ParticlesPainter(particles: _particles),
+              ),
             ),
-          ),
           SingleChildScrollView(
             controller: _scrollController,
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -395,33 +410,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ).animate().fadeIn(duration: 500.ms, delay: 800.ms),
         const SizedBox(height: 30),
-        Center(
-          child: Container(
-            height: 200,
-            width: 200,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.secondaryColor, width: 3),
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                'assets/images/profile.jpg',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: AppColors.cardColor,
-                    child: Icon(
-                      Icons.person,
-                      size: 100,
-                      color: AppColors.secondaryColor.withOpacity(0.7),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ).animate().scale(delay: 1000.ms, duration: 500.ms),
-        ),
-        const SizedBox(height: 30),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -537,42 +525,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
         
-        // Right side - Profile image
+        // Right side - Animated 3D cube
         Expanded(
-          child: Container(
-            alignment: Alignment.center,
-            child: Container(
-              height: 350,
-              width: 350,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.secondaryColor.withOpacity(0.3),
-                    blurRadius: 30,
-                    spreadRadius: 5,
-                  ),
-                ],
-                border: Border.all(color: AppColors.secondaryColor, width: 5),
-              ),
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/images/profile.jpg',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: AppColors.cardColor,
-                      child: Icon(
-                        Icons.person,
-                        size: 150,
-                        color: AppColors.secondaryColor.withOpacity(0.7),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ).animate().scale(delay: 1000.ms, duration: 800.ms),
-          ),
+          child: _build3DCube(),
         ),
       ],
     );
@@ -602,8 +557,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Row(
       children: [
         _socialIcon(Icons.code, AppConstants.github),
-        _socialIcon(Icons.person_pin, AppConstants.linkedin),
-        _socialIcon(Icons.people, AppConstants.twitter),
         _socialIcon(Icons.facebook, AppConstants.facebook),
       ],
     );
@@ -1023,6 +976,305 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ],
     );
   }
+
+  // 3D cube animation
+  Widget _build3DCube() {
+    return Container(
+      height: 400,
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Background circles
+          ...List.generate(3, (index) {
+            final size = 300 - (index * 60);
+            return Container(
+              width: size.toDouble(),
+              height: size.toDouble(),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.secondaryColor.withOpacity(0.1 + (index * 0.05)), 
+                  width: 1
+                ),
+              ),
+            ).animate(
+              onPlay: (controller) => controller.repeat(),
+            ).rotate(
+              duration: Duration(seconds: 20 + (index * 10)),
+              curve: Curves.linear,
+            );
+          }),
+          
+          // Floating code snippets
+          ...List.generate(5, (index) {
+            final snippets = [
+              'const app = build();',
+              'flutter create project',
+              'import material.dart',
+              'setState(() { ... })',
+              'return Container(...)',
+            ];
+            
+            final positions = [
+              const Offset(0.2, 0.2),
+              const Offset(0.8, 0.3),
+              const Offset(0.3, 0.7),
+              const Offset(0.7, 0.8),
+              const Offset(0.5, 0.5),
+            ];
+            
+            return Positioned(
+              left: MediaQuery.of(context).size.width * 0.25 * positions[index].dx,
+              top: 400 * positions[index].dy,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.cardColor.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: AppColors.secondaryColor.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  snippets[index],
+                  style: TextStyle(
+                    color: AppColors.secondaryColor,
+                    fontSize: 12,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+              ).animate()
+                .fade(duration: 500.ms, delay: Duration(milliseconds: 500 + index * 200))
+                .slideY(begin: 0.2, end: 0),
+            );
+          }),
+          
+          // 3D Rotating cube
+          Center(
+            child: AnimatedBuilder(
+              animation: _cubeController,
+              builder: (context, child) {
+                return Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.identity()
+                    ..setEntry(3, 2, 0.001) // Perspective
+                    ..rotateY(_cubeController.value * 2 * math.pi)
+                    ..rotateX(math.sin(_cubeController.value * math.pi) * 0.5),
+                  child: _buildCube(),
+                );
+              },
+            ),
+          ),
+          
+          // Connection lines
+          ...List.generate(8, (index) {
+            final double angle = (index / 8) * 2 * math.pi;
+            final double startRadius = 90;
+            final double endRadius = 150;
+            final double startX = startRadius * math.cos(angle);
+            final double startY = startRadius * math.sin(angle);
+            final double endX = endRadius * math.cos(angle);
+            final double endY = endRadius * math.sin(angle);
+            
+            return CustomPaint(
+              size: const Size(400, 400),
+              painter: _LinePainter(
+                start: Offset(200 + startX, 200 + startY),
+                end: Offset(200 + endX, 200 + endY),
+                color: AppColors.secondaryColor.withOpacity(0.2),
+              ),
+            );
+          }),
+          
+        ],
+      ),
+    );
+  }
+  
+  // Build the 3D cube
+  Widget _buildCube() {
+    return Container(
+      width: 180,
+      height: 180,
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.secondaryColor.withOpacity(0.3),
+            blurRadius: 30,
+            spreadRadius: 5,
+          ),
+        ],
+        border: Border.all(
+          color: AppColors.secondaryColor,
+          width: 2,
+        ),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.secondaryColor.withOpacity(0.1),
+            AppColors.backgroundColor,
+            AppColors.cardColor,
+          ],
+        ),
+      ),
+      child: Stack(
+        children: [
+          // Logo icon in the center
+          Center(
+            child: Icon(
+              Icons.code,
+              size: 60,
+              color: AppColors.secondaryColor,
+            ).animate(
+              onPlay: (controller) => controller.repeat(),
+            ).shimmer(
+              duration: 2000.ms,
+            ),
+          ),
+          
+          // Grid pattern
+          CustomPaint(
+            size: const Size(180, 180),
+            painter: _GridPainter(
+              color: AppColors.secondaryColor.withOpacity(0.2),
+              cellSize: 15,
+            ),
+          ),
+          
+          // Overlaying code-like patterns
+          Positioned(
+            top: 20,
+            left: 20,
+            child: _buildCodePatterns(5),
+          ),
+          
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: _buildCodePatterns(4),
+          ),
+          
+          // Pulsing highlight
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.secondaryColor.withOpacity(0.2),
+                    Colors.transparent,
+                  ],
+                  stops: const [0.1, 1.0],
+                ),
+              ),
+            ).animate(
+              onPlay: (controller) => controller.repeat(),
+            ).custom(
+              duration: 3000.ms,
+              builder: (context, value, child) {
+                final opacity = 0.3 + (math.sin(value * math.pi * 2) * 0.7);
+                return Opacity(
+                  opacity: opacity.clamp(0.0, 1.0),
+                  child: child,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  // Build code-like patterns
+  Widget _buildCodePatterns(int lines) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(lines, (index) {
+        final width = 20.0 + (math.Random().nextDouble() * 80);
+        return Container(
+          margin: const EdgeInsets.only(bottom: 6),
+          height: 8,
+          width: width,
+          decoration: BoxDecoration(
+            color: AppColors.secondaryColor.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+// Grid painter for the cube
+class _GridPainter extends CustomPainter {
+  final Color color;
+  final double cellSize;
+  
+  _GridPainter({
+    required this.color,
+    required this.cellSize,
+  });
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 0.5
+      ..style = PaintingStyle.stroke;
+      
+    // Draw horizontal lines
+    for (double i = 0; i <= size.height; i += cellSize) {
+      canvas.drawLine(
+        Offset(0, i), 
+        Offset(size.width, i), 
+        paint,
+      );
+    }
+    
+    // Draw vertical lines
+    for (double i = 0; i <= size.width; i += cellSize) {
+      canvas.drawLine(
+        Offset(i, 0), 
+        Offset(i, size.height), 
+        paint,
+      );
+    }
+  }
+  
+  @override
+  bool shouldRepaint(_GridPainter oldDelegate) => false;
+}
+
+// Line painter
+class _LinePainter extends CustomPainter {
+  final Offset start;
+  final Offset end;
+  final Color color;
+  
+  _LinePainter({
+    required this.start,
+    required this.end,
+    required this.color,
+  });
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+    
+    canvas.drawLine(start, end, paint);
+  }
+  
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 // Particle class to represent a single floating particle

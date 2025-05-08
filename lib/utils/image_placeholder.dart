@@ -17,6 +17,21 @@ class ImagePlaceholder {
       );
     }
     
+    // Xử lý đặc biệt cho Exam Guard logo
+    if (imagePath.contains('exam_guard_logo')) {
+      return Container(
+        color: Colors.white,
+        padding: const EdgeInsets.all(20),
+        child: Transform.scale(
+          scale: 0.8, // Thu nhỏ hình ảnh xuống 80%
+          child: Image.asset(
+            imagePath,
+            fit: BoxFit.contain,
+          ),
+        ),
+      );
+    }
+    
     // Các hình ảnh khác vẫn dùng code cũ
     return Image.asset(
       imagePath,

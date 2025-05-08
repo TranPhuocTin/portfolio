@@ -241,7 +241,7 @@ class AppConstants {
         ],
       'github': 'https://github.com/TranPhuocTin/ExamGuardApp',
       'live': 'https://example.com/exam-guard',
-      'image': 'assets/images/project2.jpg',
+      'image': 'assets/icons/exam_guard_logo.png',
       'apk_download': 'https://drive.google.com/file/d/example-examguard/view',
     },
   ];
