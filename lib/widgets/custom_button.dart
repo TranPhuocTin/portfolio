@@ -9,6 +9,7 @@ class CustomButton extends StatelessWidget {
   final double height;
   final double width;
   final Color? color;
+  final String? tooltip;
 
   const CustomButton({
     Key? key,
@@ -19,11 +20,12 @@ class CustomButton extends StatelessWidget {
     this.height = 45,
     this.width = 150,
     this.color,
+    this.tooltip,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final buttonWidget = Container(
       width: width,
       height: height,
       margin: const EdgeInsets.symmetric(vertical: 5),
@@ -58,5 +60,12 @@ class CustomButton extends StatelessWidget {
         ),
       ),
     );
+    
+    return tooltip != null
+        ? Tooltip(
+            message: tooltip!,
+            child: buttonWidget,
+          )
+        : buttonWidget;
   }
 } 

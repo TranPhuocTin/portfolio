@@ -6,6 +6,7 @@ import 'package:portfolio/widgets/custom_button.dart';
 import 'package:portfolio/widgets/section_title.dart';
 import 'package:portfolio/widgets/project_card.dart';
 import 'package:portfolio/utils/url_launcher_helper.dart';
+import 'package:portfolio/utils/file_helper.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:math' as math;
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -24,9 +25,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   
   // Controllers for contact form
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _subjectController = TextEditingController();
-  final TextEditingController _messageController = TextEditingController();
+  // final TextEditingController _nameController = TextEditingController();
+  // final TextEditingController _subjectController = TextEditingController();
+  // final TextEditingController _messageController = TextEditingController();
   
   // Navigation sections and scroll positions
   final List<String> _sections = [
@@ -35,11 +36,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     'Skills',
     'Projects',
     'Experience',
-    'Contact',
+    // 'Contact',
   ];
   
   // Fixed scroll positions (approximate px from top) - sẽ được điều chỉnh trong initState
-  List<double> _sectionOffsets = [0, 600, 900, 1200, 1800, 2400];
+  List<double> _sectionOffsets = [0, 600, 900, 1200, 1800]; // Removed Contact offset, adjust if necessary
   
   int _selectedIndex = 0;
 
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // Initialize animation controller for particles
     _particleController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 16), // ~60fps
+      duration: const Duration(milliseconds: 30), // ~60fps
     )..repeat();
     
     _particleController.addListener(() {
@@ -98,9 +99,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void dispose() {
     _scrollController.removeListener(_updateSelectedIndexBasedOnScroll);
     _scrollController.dispose();
-    _nameController.dispose();
-    _subjectController.dispose();
-    _messageController.dispose();
+    // _nameController.dispose();
+    // _subjectController.dispose();
+    // _messageController.dispose();
     _particleController.dispose();
     super.dispose();
   }
@@ -117,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         screenHeight * 0.75 + 350 * factor, // Skills 
         screenHeight * 0.75 + 500 * factor, // Projects
         screenHeight * 0.75 + 900 * factor, // Experience
-        screenHeight * 0.75 + 1500 * factor, // Contact
+        // screenHeight * 0.75 + 1500 * factor, // Contact (Commented out)
       ];
     });
   }
@@ -150,21 +151,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   // Send email with form data
-  void _sendEmail() {
-    final name = _nameController.text.trim();
-    final subject = _subjectController.text.trim();
-    final message = _messageController.text.trim();
-    
-    // Create email body with sender's name
-    final bodyText = 'From: $name\n\n$message';
-    
-    // Launch email client with pre-filled data
-    UrlLauncherHelper.launchEmail(
-      AppConstants.email,
-      subject: subject,
-      body: bodyText,
-    );
-  }
+  // void _sendEmail() {
+  //   final name = _nameController.text.trim();
+  //   final subject = _subjectController.text.trim();
+  //   final message = _messageController.text.trim();
+  //   
+  //   // Create email body with sender's name
+  //   final bodyText = 'From: $name\n\n$message';
+  //   
+  //   // Launch email client with pre-filled data
+  //   UrlLauncherHelper.launchEmail(
+  //     AppConstants.email,
+  //     subject: subject,
+  //     body: bodyText,
+  //   );
+  // }
   
   // Show project detail dialog
   void _showProjectDetail(Map<String, dynamic> project) {
@@ -200,8 +201,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 const SizedBox(height: 80),
                 _buildExperienceSection(),
                 const SizedBox(height: 80),
-                _buildContactSection(),
-                const SizedBox(height: 80),
+                // _buildContactSection(),
+                // const SizedBox(height: 80),
                 _buildFooter(),
               ],
             ),
@@ -389,6 +390,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   },
                   outline: true,
                 ).animate().scale(delay: 1100.ms),
+                const SizedBox(width: 16),
+                CustomButton(
+                  text: 'Tải CV',
+                  onPressed: () => FileHelper.openAssetFile(AppConstants.cvUrl, AppConstants.cvFileName),
+                  icon: Icons.download_rounded,
+                  outline: true,
+                  tooltip: 'Tải ${AppConstants.cvFileName}',
+                ).animate().scale(delay: 1200.ms),
               ],
             ),
             const SizedBox(height: 40),
@@ -468,6 +477,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 _infoItem(Icons.location_on, 'Location', AppConstants.location),
               ],
             ),
+            CustomButton(
+              text: 'Tải CV',
+              onPressed: () => FileHelper.openAssetFile(AppConstants.cvUrl, AppConstants.cvFileName),
+              icon: Icons.download_rounded,
+              outline: true,
+              tooltip: 'Tải ${AppConstants.cvFileName}',
+            ),
           ],
         ),
       ],
@@ -511,10 +527,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionTitle(title: 'Skills')
-            .animate()
-            .fadeIn(duration: 500.ms)
-            .slide(begin: const Offset(-0.1, 0), end: Offset.zero),
+        const SectionTitle(title: 'Skills'),
+
         const SizedBox(height: 20),
         Wrap(
           spacing: 16,
@@ -536,12 +550,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   fontSize: 14,
                 ),
               ),
-            )
-            .animate(delay: Duration(milliseconds: 50 * index))
-            .fadeIn(duration: 400.ms)
-            .slide(begin: const Offset(0, 0.2), end: Offset.zero)
-            .then()
-            .shimmer(duration: 1200.ms, delay: 600.ms);
+            );
           }).toList(),
         ),
       ],
@@ -832,103 +841,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     .animate(delay: Duration(milliseconds: 200 * index))
     .fadeIn(duration: 600.ms)
     .slide(begin: const Offset(0, 0.1), end: Offset.zero);
-  }
-
-  // Contact Section
-  Widget _buildContactSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionTitle(title: 'Contact')
-            .animate()
-            .fadeIn(duration: 500.ms)
-            .slide(begin: const Offset(-0.1, 0), end: Offset.zero),
-        const SizedBox(height: 20),
-        Text(
-          AppConstants.contactDescription,
-          style: const TextStyle(
-            color: AppColors.subTextColor,
-            fontSize: 16,
-            height: 1.6,
-          ),
-        ).animate().fadeIn(duration: 500.ms).slide(begin: const Offset(0, 0.1), end: Offset.zero),
-        const SizedBox(height: 30),
-        Container(
-          padding: const EdgeInsets.all(32),
-          decoration: BoxDecoration(
-            color: AppColors.cardColor,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.secondaryColor.withOpacity(0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Your Name',
-                  labelStyle: TextStyle(color: AppColors.textColor),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.subTextColor),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.secondaryColor),
-                  ),
-                ),
-                style: const TextStyle(color: AppColors.textColor),
-              ).animate().fadeIn(delay: 200.ms).slide(begin: const Offset(0, 0.1), end: Offset.zero),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _subjectController,
-                decoration: const InputDecoration(
-                  labelText: 'Subject',
-                  labelStyle: TextStyle(color: AppColors.textColor),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.subTextColor),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.secondaryColor),
-                  ),
-                ),
-                style: const TextStyle(color: AppColors.textColor),
-              ).animate().fadeIn(delay: 300.ms).slide(begin: const Offset(0, 0.1), end: Offset.zero),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _messageController,
-                maxLines: 5,
-                decoration: const InputDecoration(
-                  labelText: 'Message',
-                  alignLabelWithHint: true,
-                  labelStyle: TextStyle(color: AppColors.textColor),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.subTextColor),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.secondaryColor),
-                  ),
-                ),
-                style: const TextStyle(color: AppColors.textColor),
-              ).animate().fadeIn(delay: 400.ms).slide(begin: const Offset(0, 0.1), end: Offset.zero),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: CustomButton(
-                  text: 'Send Message',
-                  onPressed: _sendEmail,
-                  width: double.infinity,
-                  icon: Icons.send,
-                ).animate().fadeIn(delay: 500.ms).scale(),
-              ),
-            ],
-          ),
-        ).animate().fadeIn().scale(begin: const Offset(0.95, 0.95), delay: 100.ms),
-      ],
-    );
   }
 
   // Footer

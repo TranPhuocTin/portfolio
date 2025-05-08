@@ -119,7 +119,7 @@ class _ProjectCardState extends State<ProjectCard> with SingleTickerProviderStat
                               borderRadius: BorderRadius.circular(8),
                               child: Hero(
                                 tag: 'project-${widget.title}',
-                                child: ImagePlaceholder.buildProjectImage(widget.title),
+                                child: ImagePlaceholder.buildProjectImage(widget.image, widget.title),
                               ),
                             ),
                           ),

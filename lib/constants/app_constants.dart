@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AppConstants {
   // Portfolio Information
@@ -7,6 +8,13 @@ class AppConstants {
   static const String email = "phuoctin74@gmail.com";
   static const String phone = "+84 70 802 50 65";
   static const String location = "Đà Nẵng, Việt Nam";
+  
+  // CV Download
+  static const String cvFileName = "TranPhuocTin_CV.pdf";
+  static const String cvFilePath = "assets/files/TranPhuocTin_CV.pdf";
+  static String get cvUrl => kIsWeb 
+      ? "assets/files/TranPhuocTin_CV.pdf" 
+      : cvFilePath;
   
   // Social Media Links
   static const String github = "https://github.com/TranPhuocTin";
@@ -71,7 +79,7 @@ class AppConstants {
   ],
       'github': 'https://github.com/TranPhuocTin/roomily-app',
       'live': 'https://example.com/roomily-app',
-      'image': 'assets/images/project1.jpg',
+      'image': 'assets/icons/roomily_logo.png',
       'apk_download': 'https://drive.google.com/drive/folders/1fEQkawlaaq6ghK8jYVIqqWl14ZO9p-9w?usp=drive_link',
       'screenshots': [
         {
@@ -210,29 +218,28 @@ class AppConstants {
       'title': 'Exam Guard',
       'description': 'Ứng dụng giám sát thi cử sử dụng công nghệ AI để phát hiện các hành vi gian lận và đảm bảo tính công bằng trong quá trình kiểm tra trực tuyến.',
       'technologies': ['Flutter', 'Websocket', 'ML Kit API', 'Bloc/Cubit'],
-      'technologies_detail': [
-        'Flutter', 'Dart', 'Bloc/Cubit', 'TensorFlow Lite', 
-        'Firebase ML Kit', 'WebRTC', 'Face Detection API', 
-        'Eye Tracking', 'Audio Analysis', 'Socket.IO',
-        'Node.js Backend'
-      ],
-      'goals': [
-        'Xây dựng hệ thống giám sát thi cử trực tuyến hiệu quả',
-        'Sử dụng AI để phát hiện hành vi gian lận tự động',
-        'Tạo môi trường thi cử công bằng cho tất cả thí sinh',
-        'Giảm thiểu nhu cầu giám sát thủ công của giáo viên'
-      ],
-      'features': [
-        'Face detection để xác minh danh tính thí sinh',
-        'Theo dõi chuyển động mắt để phát hiện hành động đáng ngờ',
-        'Phát hiện khi có người khác xuất hiện trong khung hình',
-        'Phân tích âm thanh để phát hiện tiếng nói hoặc tiếng ồn',
-        'Chụp màn hình ngẫu nhiên để kiểm tra hoạt động',
-        'Báo cáo chi tiết về các hành vi đáng ngờ',
-        'Dashboard cho giáo viên theo dõi nhiều thí sinh cùng lúc',
-        'Khả năng hoạt động với băng thông thấp'
-      ],
-      'github': 'https://github.com/TranPhuocTin/exam-guard-app',
+       "technologies_detail": [
+          "Flutter", "Dart", "Bloc/Cubit", "Google ML Kit", 
+          "Camera API", 
+          "Socket.IO", "JSON Serialization"
+        ],
+        "goals": [
+          "Xây dựng hệ thống giám sát thi cử trực tuyến hiệu quả",
+          "Sử dụng AI để phát hiện hành vi gian lận tự động",
+          "Tạo môi trường thi cử công bằng cho tất cả thí sinh",
+          "Giảm thiểu nhu cầu giám sát thủ công của giáo viên"
+        ],
+        "features": [
+          "Face detection để xác minh danh tính thí sinh",
+          "Theo dõi chuyển động mắt để phát hiện hành động đáng ngờ",
+          "Phát hiện khi có người khác xuất hiện trong khung hình",
+          "Phân tích âm thanh để phát hiện tiếng nói hoặc tiếng ồn",
+          "Chụp màn hình ngẫu nhiên để kiểm tra hoạt động",
+          "Báo cáo chi tiết về các hành vi đáng ngờ",
+          "Dashboard cho giáo viên theo dõi nhiều thí sinh cùng lúc",
+          "Khả năng hoạt động với băng thông thấp"
+        ],
+      'github': 'https://github.com/TranPhuocTin/ExamGuardApp',
       'live': 'https://example.com/exam-guard',
       'image': 'assets/images/project2.jpg',
       'apk_download': 'https://drive.google.com/file/d/example-examguard/view',
